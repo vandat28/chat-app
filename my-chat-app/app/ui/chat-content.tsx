@@ -11,6 +11,14 @@ export default function ChatContent({ params, user }: { params: { id: string }, 
     const [message, setMessage] = useState('')
     const [inbox, setInbox] = useState<any>([])
     const [socket, setSocket] = useState<any>('')
+    const emoticons = [
+        '😊', '😄', '😁', '😆', '😂', '😃', '😎', '😋', '😉', '😍',
+        '😇', '😘', '🥰', '😚', '😜', '🤪', '😝', '🤑', '🤗', '🤭',
+        '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄',
+        '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕',
+        '🤢', '🤮', '🤧', '😵', '🤯', '🤠', '🥳', '😎', '😇', '🥰',
+        '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕'
+    ];
 
 
     useEffect(() => {
@@ -29,6 +37,10 @@ export default function ChatContent({ params, user }: { params: { id: string }, 
         };
     }, [])
     const chatContainerRef = useRef<any>(null);
+    const inputRef = useRef<any>(null);
+    const focusInput = () => {
+        inputRef.current.focus();
+    };
 
     // Cuộn xuống dưới khi có tin nhắn mới
     useEffect(() => {
@@ -56,8 +68,17 @@ export default function ChatContent({ params, user }: { params: { id: string }, 
             socket.emit("message", `{"id": "${user.id}","img": "${user.img}", "message": "${message}"}`, roomId)
             setMessage('')
         }
-
     }
+
+    const handleEmoticonSelect = (emoticon: any) => {
+        setMessage(message + emoticon)
+        focusInput()
+    };
+
+    const handleCopy = (event: React.ClipboardEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        console.log('Copy is disabled for this block');
+    };
     return (
         <>
             <div className="h-screen overflow-y-auto p-4 bg-indigo-200 border-t border-gray-300" ref={chatContainerRef}>
@@ -87,8 +108,15 @@ export default function ChatContent({ params, user }: { params: { id: string }, 
                 ))}
             </div >
             <form onSubmit={sendMessage} className="bg-white border-t border-gray-300 p-4 bottom-0 flex-1">
+                <div id="emotionBlock" className="mb-4 overflow-y-auto h-[60px]" onCopy={handleCopy}>
+                    {emoticons.map((emoticon, index) => (
+                        <span key={index} className='cursor-pointer m-2 hover:bg-gray-300 p-0.5 rounded text-xl' onClick={() => handleEmoticonSelect(emoticon)}>
+                            {emoticon}
+                        </span>
+                    ))}
+                </div>
                 <div className="flex items-center">
-                    <input value={message} onChange={(e) => { setMessage(e.target.value) }} type="text" placeholder="Type a message..." className="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500 text-gray-600 mr-3" />
+                    <input ref={inputRef} value={message} onChange={(e) => { setMessage(e.target.value) }} type="text" placeholder="Type a message..." className="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500 text-gray-600 mr-3" />
                     <Button type='submit' variant="contained">Send</Button>
                 </div>
             </form>

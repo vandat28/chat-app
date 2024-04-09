@@ -8,7 +8,7 @@ export default function Header() {
 
 
     return (
-        <header className="bg-indigo-600 p-4 text-gray-700 flex justify-between">
+        <header className="bg-indigo-500 p-4 text-gray-700 flex justify-between">
             <Image
                 className="relative"
                 src="/chat-alt-outline-filled.png"
