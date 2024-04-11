@@ -1,13 +1,11 @@
 'use server';
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 import { cookies } from 'next/headers'
 import { SignJWT, jwtVerify } from "jose";
 import axios from 'axios';
 import { redirect } from 'next/navigation';
 import { unstable_noStore as noStore } from 'next/cache';
-
-
 
 
 const secretKey = process.env.AUTH_SECRET;
@@ -18,8 +16,6 @@ export async function authenticate(
     formData: FormData,
 ) {
     try {
-        console.log(formData)
-        console.log(process.env.AUTH_SECRET)
         await signIn('credentials', formData);
     } catch (error) {
         if (error instanceof AuthError) {
@@ -133,6 +129,50 @@ async function deleteInbox(id: string) {
         console.error('Failed to submit form:', error);
     }
 }
+
+export async function logOut() {
+    cookies().delete("session");
+    await signOut();
+}
+
+export async function updateStatus(status: number, userid: string) {
+    try {
+        // Make a POST request using Axios
+        const response = await axios.put(`http://localhost:8000/user/status/${userid}`, { status });
+        // Handle the response
+        console.log(response.data)
+
+    } catch (error) {
+        // Handle errors
+        console.error('Failed to submit form:', error);
+    }
+}
+
+export async function addUserToRoom(roomid: string, userid: string) {
+    try {
+        // Make a POST request using Axios
+        const response = await axios.post('http://localhost:8000/user/add-to-room', { roomid, userid });
+        // Handle the response
+        console.log(response.data)
+        console.log('Form submitted successfully');
+
+    } catch (error) {
+        // Handle errors
+        console.error('Failed to submit form:', error);
+    }
+
+}
+
+export async function getRoomMember(roomid: string, userid: string) {
+    try {
+        const res = await axios.get(`http://localhost:8000/user/room-member?roomid=${roomid}&userid=${userid}`)
+        const data = res.data;
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 
 

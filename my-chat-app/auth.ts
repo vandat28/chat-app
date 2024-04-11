@@ -4,7 +4,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
 import axios from 'axios';
-import { encrypt } from './app/lib/actions';
+import { encrypt, updateStatus } from './app/lib/actions';
 import { cookies } from "next/headers";
 
 async function getUser(id: string) {
@@ -35,7 +35,7 @@ export const { auth, signIn, signOut } = NextAuth({
                     return null;
                 }
                 if (user.password == password) {
-
+                    await updateStatus(1, user.id)
                     const session = await encrypt({ user });
                     // Save the session in a cookie
                     cookies().set("session", session, { httpOnly: true });

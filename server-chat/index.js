@@ -6,6 +6,10 @@ const io = require("socket.io")(8080, {
 })
 
 io.on("connection", (socket) => {
+    console.log(`A  ${socket.id} user connected`);
+
+    // Gửi thông báo đến máy khách khi có người dùng kết nối
+    socket.emit('userConnected', `A new user ${socket.id} connected`);
     socket.on("message", (message, roomId) => {
         if (roomId) {
             io.to(roomId).emit("message", message)
@@ -18,7 +22,6 @@ io.on("connection", (socket) => {
     socket.on('joinRoom', (roomId) => {
         // Tham gia vào phòng có roomId
         socket.join(roomId);
-        console.log(`User ${socket.id} joined room ${roomId}`);
     })
 
 })

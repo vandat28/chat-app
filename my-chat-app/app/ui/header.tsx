@@ -1,31 +1,23 @@
-import Image from "next/image";
-import { signOut } from '@/auth';
-import { cookies } from "next/headers";
+import { getRoom } from "../lib/data"
+import Search from "./search"
 
 
 
-export default function Header() {
 
 
+export default async function Header({ params }: { params: { id: string } }) {
+    const room = await getRoom(params.id)
     return (
-        <header className="bg-indigo-500 p-4 text-gray-700 flex justify-between">
-            <Image
-                className="relative"
-                src="/chat-alt-outline-filled.png"
-                alt="Next.js Logo"
-                width={40}
-                height={40}
-                priority
-            />
-            <form className="" action={async () => {
-                'use server';
-                cookies().delete("session");
-                await signOut();
-            }}>
-                <button className="h-[40px] w-full grow  gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-                    <div className="hidden md:block">Sign Out</div>
-                </button>
-            </form>
+        <header className="bg-indigo-500 p-4 flex items-center h-16 justify-between">
+            <div className="flex items-center">
+                <div className="bg-gray-300 rounded-full mr-3">
+                    <img src={room.img} alt="User Avatar" className="w-12 h-12 rounded-full" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-950">{room.roomname}</h3>
+            </div>
+
+            <Search />
+
         </header>
     )
 }

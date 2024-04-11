@@ -30,6 +30,28 @@ export async function getInbox(id: string) {
     }
 }
 
+export async function getRoom(id: string) {
+    noStore()
+    try {
+        const res = await axios.get(`http://localhost:8000/room/${id}`)
+        const data = res.data;
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function getUserInRoom(id: string) {
+    noStore()
+    try {
+        const res = await axios.get(`http://localhost:8000/user/find-in-room/${id}`)
+        const data = res.data;
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 // export async function getChatMessege(): Promise<User[]> {
 //     noStore()
 //     return new Promise<User[]>((resolve, reject) => {

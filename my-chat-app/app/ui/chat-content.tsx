@@ -4,6 +4,10 @@ import io from 'socket.io-client';
 import { Button } from "@mui/material";
 import { updateInbox } from '../lib/actions';
 import { getInbox } from '../lib/data';
+import { FaRegSmileBeam } from "react-icons/fa";
+
+
+
 
 
 export default function ChatContent({ params, user }: { params: { id: string }, user: any }) {
@@ -11,6 +15,16 @@ export default function ChatContent({ params, user }: { params: { id: string }, 
     const [message, setMessage] = useState('')
     const [inbox, setInbox] = useState<any>([])
     const [socket, setSocket] = useState<any>('')
+    const [isOpen, setIsOpen] = useState(false)
+
+
+    const handleOpenDropDown = () => {
+        if (isOpen) {
+            setIsOpen(false)
+        } else {
+            setIsOpen(true)
+        }
+    }
     const emoticons = [
         '😊', '😄', '😁', '😆', '😂', '😃', '😎', '😋', '😉', '😍',
         '😇', '😘', '🥰', '😚', '😜', '🤪', '😝', '🤑', '🤗', '🤭',
@@ -81,7 +95,7 @@ export default function ChatContent({ params, user }: { params: { id: string }, 
     };
     return (
         <>
-            <div className="h-screen overflow-y-auto p-4 bg-indigo-200 border-t border-gray-300" ref={chatContainerRef}>
+            <div className="overflow-y-auto p-4 bg-indigo-200 border-t border-gray-300 h-3/4" ref={chatContainerRef}>
                 {inbox && inbox.map((element: any, index: number) => (
                     <div key={index}>
                         {element.id === user.id ? (
@@ -107,16 +121,19 @@ export default function ChatContent({ params, user }: { params: { id: string }, 
                     </div>
                 ))}
             </div >
-            <form onSubmit={sendMessage} className="bg-white border-t border-gray-300 p-4 bottom-0 flex-1">
-                <div id="emotionBlock" className="mb-4 overflow-y-auto h-[60px]" onCopy={handleCopy}>
+            <form onSubmit={sendMessage} className="bg-white border-t border-gray-300 p-6 h-1/4 relative">
+                {isOpen && <div id="emotionBlock" className="mb-4 overflow-y-auto z-10 bg-white divide-y rounded-lg shadow w-64 h-64 absolute right-6 bottom-32" onCopy={handleCopy}>
                     {emoticons.map((emoticon, index) => (
                         <span key={index} className='cursor-pointer m-2 hover:bg-gray-300 p-0.5 rounded text-xl' onClick={() => handleEmoticonSelect(emoticon)}>
                             {emoticon}
                         </span>
                     ))}
-                </div>
+                </div>}
                 <div className="flex items-center">
-                    <input ref={inputRef} value={message} onChange={(e) => { setMessage(e.target.value) }} type="text" placeholder="Type a message..." className="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500 text-gray-600 mr-3" />
+                    <input ref={inputRef} value={message} onChange={(e) => { setMessage(e.target.value) }} type="text" placeholder="Type a message..." className="p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500 text-gray-600 w-full" />
+                    <div className="text-2xl p-2 hover:bg-indigo-100 rounded-lg cursor-pointer" onClick={handleOpenDropDown}>
+                        <FaRegSmileBeam />
+                    </div>
                     <Button type='submit' variant="contained">Send</Button>
                 </div>
             </form>

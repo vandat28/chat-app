@@ -1,17 +1,19 @@
 'use client'
 import ChatList from './chat-list';
 import { Suspense, useEffect, useState } from 'react';
-import Loading from "../ui/loading/loading";
 import { usePathname } from 'next/navigation';
 import CreateRoomForm from './create-room-form';
 import { getChatRoom } from '../lib/data';
 import { Room } from '../lib/definitions';
+import Info from './info';
+
+
 
 
 
 export default function SideBar({ user }: { user: any }) {
     const pathname = usePathname();
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
     const [rooms, setRooms] = useState<Room[]>([])
     useEffect(() => {
         getDataChatRoom()
@@ -33,16 +35,9 @@ export default function SideBar({ user }: { user: any }) {
                         </div>
                     </button>
                 </div>
-                <div className="flex justify-center items-center">
-                    <div className="w-12 h-12 bg-gray-300 rounded-full mr-3">
-                        <img src={`${user.user.img}&amp;font=Lato`} alt="User Avatar" className="w-12 h-12 rounded-full" />
-
-                    </div>
-                    <span className="text-blue-400 hidden md:block">{user.user.username}</span>
-                </div>
             </header>
             <ChatList user={user.user} rooms={rooms} pathname={pathname} getDataChatRoom={getDataChatRoom} />
-            {/* <Search /> */}
+            <Info user={user.user} />
             {showModal && <CreateRoomForm user={user.user} setShowModal={setShowModal} getDataChatRoom={getDataChatRoom} />}
         </div>
     )

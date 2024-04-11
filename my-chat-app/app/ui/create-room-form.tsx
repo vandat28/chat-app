@@ -7,7 +7,7 @@ import { createRoomChat } from '../lib/actions';
 
 export default function CreateRoomForm(
     { setShowModal, getDataChatRoom, user }:
-        { setShowModal: any, getDataChatRoom: any, user: any }) {
+        { setShowModal: (isOpen: boolean) => void, getDataChatRoom: () => void, user: any }) {
     const [formData, setFormData] = useState({
         id: '',
         roomname: '',

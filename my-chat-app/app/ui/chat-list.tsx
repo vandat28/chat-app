@@ -4,13 +4,13 @@ import clsx from "clsx";
 import Link from "next/link";
 import { Delete } from "./deleteButton";
 
-export default function ChatList({ user, pathname, rooms, getDataChatRoom }: { pathname: string, rooms: Room[], getDataChatRoom: any, user: any }) {
+export default function ChatList({ user, pathname, rooms, getDataChatRoom }: { pathname: string, rooms: Room[], getDataChatRoom: () => void, user: any }) {
 
     return (
         <div className="overflow-y-auto h-screen p-3">
-            {rooms && rooms.map((item) => (
+            {rooms && rooms.map((item, index) => (
                 <div className="mb-6">
-                    <Link href={`/chat/${item.id}`} key={item.id}
+                    <Link href={`/chat/${item.id}`} key={index}
                         className={clsx(
                             'flex items-center mb-1 cursor-pointer hover:bg-gray-100 p-2 rounded-md',
                             {
@@ -28,7 +28,9 @@ export default function ChatList({ user, pathname, rooms, getDataChatRoom }: { p
                     </Link>
                     {item.userid == user.id ?
                         <Delete id={item.id} getDataChatRoom={getDataChatRoom} /> :
-                        <div className="p-2 text-lg text-blue-400 font-semibold">Chủ phòng: {item.username}</div>}
+                        <div className="p-2 text-lg text-blue-400 font-semibold">
+                            Host: {item.username}
+                        </div>}
                 </div>
 
 

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import SideBar from "../ui/side-bar";
 
-import Header from "../ui/header";
 import { getSessionData } from "../lib/actions";
+import Header from "../ui/header";
 
 
 export const metadata: Metadata = {
@@ -20,7 +20,6 @@ export default async function RootLayout({
         <body className="flex h-screen overflow-hidden">
             <SideBar user={user} />
             <div className="flex flex-col w-3/4">
-                <Header />
                 {children}
             </div>
         </body>

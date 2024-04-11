@@ -25,9 +25,21 @@ class roomService {
             });
         })
     }
+
     delete(id) {
         return new Promise((resolve, reject) => {
-            con.query(`delete from room where id = '${id}'`, function (error, result, fields) {
+            con.query(` delete from room where id = '${id}'`, function (error, result, fields) {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(result);
+            });
+        })
+    }
+    deleteRoomMember(id) {
+        return new Promise((resolve, reject) => {
+            con.query(`delete from room_member where roomid = '${id}';`, function (error, result, fields) {
                 if (error) {
                     reject(error);
                     return;
@@ -37,6 +49,17 @@ class roomService {
         })
     }
 
+    findOneById(id) {
+        return new Promise((resolve, reject) => {
+            con.query(`SELECT * FROM room where id = '${id}';`, function (error, result, fields) {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(result[0]);
+            });
+        })
+    }
 }
 
 module.exports = new roomService()
